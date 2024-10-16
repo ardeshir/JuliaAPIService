@@ -1,0 +1,25 @@
+parameters:
+- name: environment
+  type: string
+- name: azureServiceConnection
+  type: string
+
+jobs:
+- job: worfklowsDeploy
+  displayName: 'Deploy the functions'
+  steps:
+  # Download created artifacts, containing the zipped function codes
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      buildType: 'current'
+      artifactName: 'functions$(environment)'
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+
+  # Zip deploy the functions code
+  - task: AzureFunctionApp@1
+    inputs:
+      azureSubscription: $(azureServiceConnection)
+      appType: functionAppLinux
+      appName: function-app-nlp-$(environment)
+      package: $(Build.ArtifactStagingDirectory)/**/*.zip
+      deploymentMethod: 'zipDeploy'

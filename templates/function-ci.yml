@@ -1,0 +1,46 @@
+parameters:
+- name: environment
+  type: string
+
+jobs:
+- job:
+  displayName: 'Publish the function as .zip'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(pythonVersion)'
+    displayName: 'Use Python $(pythonVersion)'
+
+  - task: CopyFiles@2
+    displayName: 'Create project folder'
+    inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)'
+      Contents: |
+          **
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: Bash@3
+    displayName: 'Install requirements for running function'
+    inputs:
+      targetType: 'inline'
+      script: |
+        python3 -m pip install --upgrade pip
+        pip install setup
+        pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
+
+  - task: ArchiveFiles@2
+    displayName: 'Create project zip'
+    inputs:
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish project zip artifact'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'functions$(environment)'
+      publishLocation: 'pipeline'

@@ -1,0 +1,35 @@
+trigger:
+  branches:
+    include:
+      - dev
+      - main
+
+pool:
+  name: "Hosted Ubuntu 2024"
+
+variables:
+  ${{ if notIn(variables['Build.SourceBranchName'], 'main') }}:
+    environment: dev
+    azureServiceConnection: <SC-DEV>
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    environment: prod
+    azureServiceConnection: <SC-PROD>
+    pythonVersion: '3.9'
+
+stages:
+  # Builds the functions as .zip
+  - stage: functions_ci
+    displayName: 'Functions CI'
+    jobs:
+    - template: ./templates/functions-ci.yml
+      parameters:
+        environment: $(environment)
+  
+  # Deploys .zip workflows
+  - stage: functions_cd
+    displayName: 'Functions CD'
+    jobs:
+    - template: ./templates/functions-cd.yml
+      parameters:
+        environment: $(environment)
+        azureServiceConnection: $(azureServiceConnection)

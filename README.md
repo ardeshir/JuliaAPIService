@@ -33,6 +33,9 @@ COPY Project.toml .
 # Run a Julia command to set up the project: activate the project and instantiate to download its dependencies
 RUN julia --project -e "using Pkg; Pkg.instantiate();"
 
+# Also can use 
+# RUN julia -e 'using Pkg; Pkg.add.(["CSV", "DataFrames", "Dates", "JSON"])'
+
 # Copy the current directory's contents into the working directory in the container
 COPY . .
 
