@@ -9,7 +9,7 @@ using CSV
 using JSON
 using XLSX
 using Tables
-using Genie, Genie.Requests, Genie.Renderer.Json
+#using Genie, Genie.Requests, Genie.Renderer.Json
 
 #-------------------------------------------------------------------------------------------------
 
@@ -49,20 +49,9 @@ json_start_timestamp = now()
 #file_path = "test_1.json" 
 
 # replace read with solve post 
-# json_string = read(file_path, String)
-# json_data = JSON.parse(json_string)
+json_string = read(file_path, String)
+json_data = JSON.parse(json_string)
 # Add alive check 
-route("/health") do 
-     return "Alive, thanks for checking"
-end 
-
-json_data = ""
-
-route("/optimize", method = POST) do
-    @show jsonpayload()
-    @show rawpayload()
-#json_data = JSON.parse(json_string)
-    json_data = jsonpayload()
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
 has_vol_nut = 0
@@ -932,11 +921,6 @@ write_csv_out_total_time = write_csv_out_end_timestamp - write_csv_out_start_tim
 total_end_timestamp = now()
 total_total_time = total_end_timestamp - total_start_timestamp
 # Remove println 
-# println("Total Solve Time: ", total_total_time)
-# route("/") do 
-    #return "Time: $( now() )"
-    json("Total Solve Time: total_total_time")
+println("Total Solve Time: ", total_total_time)
 
-end 
 
-up()
