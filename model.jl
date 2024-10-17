@@ -56,13 +56,13 @@ route("/health") do
      return "Alive, thanks for checking"
 end 
 
+json_data = ""
 
 route("/optimize", method = POST) do
     @show jsonpayload()
     @show rawpayload()
 #json_data = JSON.parse(json_string)
     json_data = jsonpayload()
-end
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
 has_vol_nut = 0
@@ -933,9 +933,10 @@ total_end_timestamp = now()
 total_total_time = total_end_timestamp - total_start_timestamp
 # Remove println 
 # println("Total Solve Time: ", total_total_time)
-route("/") do 
-    return "Time: $( now() )"
-    #retrun "Total Solve Time: $(total_total_time)"
+# route("/") do 
+    #return "Time: $( now() )"
+    return "Total Solve Time: $(total_total_time)"
 
 end 
-Genie.startup()
+
+up()
