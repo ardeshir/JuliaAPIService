@@ -1,5 +1,5 @@
 # Use the latest version of the Julia image from Docker Hub as the base image
-FROM julia:1.11.0
+FROM julia:latest
 
 # Create a new user named 'jl' with a home directory and bash shell
 # Note: using a custom user to run our application instead of root results in better security
