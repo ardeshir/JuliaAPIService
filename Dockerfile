@@ -41,5 +41,5 @@ ENV JULIA_DEPOT_PATH "/home/jl/.julia"
 ENV JULIA_REVISE "off"
 ENV EARLYBIND "true"
 
-# Define the command to run the Genie app when the container starts
-CMD ["julia", "--project", "model.jl"]
+# Define the command to run the serivce when the container starts
+CMD ["julia", "--project", "src/service.jl"]
