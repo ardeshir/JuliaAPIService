@@ -9,6 +9,7 @@ using CSV
 using JSON
 using XLSX
 using Tables
+using Genie, Genie.Requests, Genie.Renderer.Json
 
 #-------------------------------------------------------------------------------------------------
 
@@ -18,9 +19,9 @@ total_start_timestamp = now()
 ### SETTINGS ###
 #-------------------------------------------------------------------------------------------------
 
-write_shit_in = 1
-write_shit_in_for_realz = 1
-write_shit_out = 1
+write_shit_in = 0
+write_shit_in_for_realz = 0
+write_shit_out = 0
 
 #-------------------------------------------------------------------------------------------------
 ### CONSTANTS ###
@@ -43,11 +44,25 @@ json_start_timestamp = now()
 
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
-file_path = "temp.json"
-#file_path = "test_1.json"
-json_string = read(file_path, String)
-json_data = JSON.parse(json_string)
+# remove need for temp.json
+# file_path = "temp.json"
+#file_path = "test_1.json" 
 
+# replace read with solve post 
+# json_string = read(file_path, String)
+# json_data = JSON.parse(json_string)
+# Add alive check 
+route("/health") do 
+     return "Alive, thanks for checking"
+end 
+
+
+route("/optimize", method = POST) do
+    @show jsonpayload()
+    @show rawpayload()
+#json_data = JSON.parse(json_string)
+    json_data = jsonpayload()
+end
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
 has_vol_nut = 0
@@ -156,7 +171,8 @@ sort!(df_i, :Index_I)
 
 json_end_timestamp = now()
 json_total_time = json_end_timestamp - json_start_timestamp
-println("Reading and ripping JSON request file: ", json_total_time)
+## Removing prints
+# println("Reading and ripping JSON request file: ", json_total_time)
 
 #-------------------------------------------------------------------------------------------------
 ### PREP SOLVER DATA ARRAYS ###
@@ -320,7 +336,8 @@ df_lsi = leftjoin(df_lsi, df_li[:, [:LocationId, :IngredientId, :Volume]], on = 
 
 arrays_end_timestamp = now()
 arrays_total_time = arrays_end_timestamp - arrays_start_timestamp
-println("Building solver arrays: ", arrays_total_time)
+## Removing Print lines 
+# println("Building solver arrays: ", arrays_total_time)
 
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
@@ -341,7 +358,8 @@ end
 
 write_csv_in_end_timestamp = now()
 write_csv_in_total_time = write_csv_in_end_timestamp - write_csv_in_start_timestamp
-println("Write Input CSVs: ", write_csv_in_total_time)
+# removing print lines
+# println("Write Input CSVs: ", write_csv_in_total_time)
 
 #~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
 # Get Solver Data Ready
@@ -425,7 +443,8 @@ end
 
 data_end_timestamp = now()
 data_total_time = data_end_timestamp - data_start_timestamp
-println("Prepping Solver Data: ", data_total_time)
+# removing Print lines
+# println("Prepping Solver Data: ", data_total_time)
 
 #^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^
 
@@ -573,7 +592,8 @@ df_obj = DataFrame(
 
 initialize_variables_end_timestamp = now()
 initialize_variables_total_time = initialize_variables_end_timestamp - initialize_variables_start_timestamp
-println("Initialize variables: ", initialize_variables_total_time)
+## Removing println 
+# println("Initialize variables: ", initialize_variables_total_time)
 
 #^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^
 #$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$
@@ -643,8 +663,9 @@ end
 @constraint(CNC, sum(x_lsn_pos[lsn] + x_lsn_neg[lsn] for lsn in 1:cnt_lsn if lsn_is_ratio[lsn]==1) == tot_lsn_bad_y_rat)
 
 x_lsn_end_timestamp = now()
-x_lsn_total_time = x_lsn_end_timestamp - x_lsn_start_timestamp
-println("X_LSN: ", x_lsn_total_time)
+x_lsn_total_time = x_lsn_end_timestamp - x_lsn_start_timestamp 
+## Removing println 
+# println("X_LSN: ", x_lsn_total_time)
 
 #-------------------------------------------------------------------------------------------------
 ### X_LS ###
@@ -672,7 +693,8 @@ end
 
 x_ls_end_timestamp = now()
 x_ls_total_time = x_ls_end_timestamp - x_ls_start_timestamp
-println("X_LS: ", x_ls_total_time)
+## Removing println 
+# println("X_LS: ", x_ls_total_time)
 
 #-------------------------------------------------------------------------------------------------
 ### X_LI ###
@@ -708,7 +730,8 @@ end
 
 x_li_end_timestamp = now()
 x_li_total_time = x_li_end_timestamp - x_li_start_timestamp
-println("X_LI: ", x_li_total_time)
+# removing println 
+# println("X_LI: ", x_li_total_time)
 
 #-------------------------------------------------------------------------------------------------
 ### X_I ###
@@ -737,7 +760,8 @@ end
 
 x_i_end_timestamp = now()
 x_i_total_time = x_i_end_timestamp - x_i_start_timestamp
-println("X_I: ", x_i_total_time)
+# removing println 
+# println("X_I: ", x_i_total_time)
 
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 #*********************************************************************************
@@ -882,7 +906,8 @@ tot_bad = sum(df_lsn.Pos) + sum(df_lsn.Neg) +
           sum(df_i.Pos) + sum(df_i.Neg)
 
 FeasBool = ifelse(tot_bad > 0, false, true)
-println("FeasBool: ", FeasBool )
+# removing println 
+# println("FeasBool: ", FeasBool )
 
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
@@ -899,10 +924,18 @@ end
 
 write_csv_out_end_timestamp = now()
 write_csv_out_total_time = write_csv_out_end_timestamp - write_csv_out_start_timestamp
-println("Write Output CSVs: ", write_csv_out_total_time)
+# removing print 
+# println("Write Output CSVs: ", write_csv_out_total_time)
 
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
 total_end_timestamp = now()
 total_total_time = total_end_timestamp - total_start_timestamp
-println("Total Solve Time: ", total_total_time)
+# Remove println 
+# println("Total Solve Time: ", total_total_time)
+route("/") do 
+    return "Time: $( now() )"
+    #retrun "Total Solve Time: $(total_total_time)"
+
+end 
+Genie.startup()
