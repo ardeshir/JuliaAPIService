@@ -935,7 +935,7 @@ total_total_time = total_end_timestamp - total_start_timestamp
 # println("Total Solve Time: ", total_total_time)
 # route("/") do 
     #return "Time: $( now() )"
-    return "Total Solve Time: $(total_total_time)"
+    json("Total Solve Time: total_total_time")
 
 end 
 
