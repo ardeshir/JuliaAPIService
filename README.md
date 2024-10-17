@@ -109,6 +109,4 @@ See src/Service.jl for an example API service
 
 ### Test API 
 
-` curl -XPOST -H "Content-type: application/json" -d '{
-     "number" : 2
-}' 'http://localhost:8000/optimize' `
+`curl -X POST http://localhost:8000/api/square  -H "Content-type: application/json" -d '{ "number": 2 }' `
