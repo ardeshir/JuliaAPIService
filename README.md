@@ -100,3 +100,9 @@ Build the Docker image:
 
 4. Push the Docker image to Docker Hub:
 ` docker push yourusername/yourimagename:latest `
+
+# Building Web APIs with HTTP
+
+- Docs: [https://github.com/JuliaWeb/HTTP.jl](HTTP)
+
+See src/Service.jl for an example API service 
