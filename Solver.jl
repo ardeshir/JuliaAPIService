@@ -1,3 +1,5 @@
+module Solver
+
 using JuMP
 using HiGHS
 using MathOptInterface
@@ -5,8 +7,10 @@ using Pkg
 using DataFrames
 using Dates
 using CSV
-using JSON
-using DataStructures
+using JSON3
+using DataStructures 
+  
+export Solve 
 
 #%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%
 #%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@ FUNctions %@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@
@@ -88,6 +92,11 @@ end
 #-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 #-------------------------------------------------------------------------------------------------
 
+  
+function Solve(json_string::String)::String  
+
+############# START model.jl ############### 
+
 total_start_timestamp = now()
 
 #-------------------------------------------------------------------------------------------------
@@ -120,10 +129,10 @@ json_start_timestamp = now()
 
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
-file_path = "temp.json"
+#file_path = "temp.json"
 #file_path = "test_1.json"
-json_string = read(file_path, String)
-json_data = JSON.parse(json_string)
+#json_string = read(file_path, String)
+json_data = JSON3.read(json_string)
 
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
@@ -1096,37 +1105,10 @@ resp = OrderedDict(
     #"GlobalIngredientResults" => GlobalResults
 )
 
-json_output = JSON.json(resp)
-open("response.json", "w") do file
-    write(file, json_output)
-end
-#-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-response_end_timestamp = now()
-response_total_time = response_end_timestamp - response_start_timestamp
-println("Build Response JSON: ", response_total_time)
-#-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
+# json_output = JSON.json(resp) 
 
-#-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-write_csv_out_start_timestamp = now()
-#-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-if write_shit_out == 1
-    CSV.write("df_obj.csv", df_obj)
-    CSV.write("df_lsn.csv", df_lsn)
-    CSV.write("df_lsi.csv", df_lsi)
-    CSV.write("df_ls.csv", df_ls)
-    CSV.write("df_li.csv", df_li)
-    CSV.write("df_i.csv", df_i)
-    CSV.write("df_l.csv", df_l)
-    CSV.write("df_c.csv", df_c)
-end
-#-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-write_csv_out_end_timestamp = now()
-write_csv_out_total_time = write_csv_out_end_timestamp - write_csv_out_start_timestamp
-println("Write Output CSVs: ", write_csv_out_total_time)
-#-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-
-#-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-total_end_timestamp = now()
-total_total_time = total_end_timestamp - total_start_timestamp
-println("Total Solve Time: ", total_total_time)
-#-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
+############# END model.jl   
+    return JSON3.write(resp)  
+end   ########## END Function Solve()
+  
+end  # End module
