@@ -109,16 +109,17 @@ RUN julia -e 'using Pkg; Pkg.add(["HTTP", "JSON3", "DataFrames"])'
 CMD ["julia", "server.jl"]  
 ```
 
-### Step 4: Build and Run the Docker Container
+### Step 4: Build and Run the Docker Container with Custom Host and Port
  
+
 Build the Docker image:
 
-`docker build -t julia-http-service . ` 
+`docker build -t julia-http-service .  `
  
-2. Run the Docker container:
+2. Run the Docker container with environment variables:
 
 
-`docker run -p 8080:8080 julia-http-service  `
+`docker run -p 8080:8080 -e SERVER_HOST=0.0.0.0 -e SERVER_PORT=8080 julia-http-service  `
  
 
 ### Summary
@@ -126,6 +127,7 @@ Build the Docker image:
 1. Using an external module Solver that processes the JSON data from the HTTP request.
 2. Modified your HTTP service to use this external module.
 3. Created a Dockerfile to containerize your service.
+
 
 ### Step 1: Install Docker
 Make sure Docker is installed on your machine. You can download and install Docker from the official Docker website.
