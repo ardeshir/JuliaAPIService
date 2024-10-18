@@ -1,6 +1,6 @@
 # Julia API Service 
 
-# Introduction to Solver.jl 
+## Introduction to Solver.jl 
 
 ### Step 1: Create the Solver.jl Module
  
