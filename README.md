@@ -94,7 +94,7 @@ Create a Dockerfile to build and run your Julia HTTP service.
 
 ```docker
 # Use the official Julia image as a parent image  
-FROM julia:1.7  
+FROM julia:latest  
   
 # Set the working directory in the container  
 WORKDIR /usr/src/app  
