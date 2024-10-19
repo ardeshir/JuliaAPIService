@@ -7,7 +7,7 @@ using Pkg
 using DataFrames
 using Dates
 using CSV
-using JSON3
+using JSON
 using DataStructures 
   
 export Solve 
@@ -132,7 +132,7 @@ json_start_timestamp = now()
 #file_path = "temp.json"
 #file_path = "test_1.json"
 #json_string = read(file_path, String)
-json_data = JSON3.read(json_string)
+json_data = JSON.parse(json_string)
 
 #-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 
@@ -1108,7 +1108,7 @@ resp = OrderedDict(
 # json_output = JSON.json(resp) 
 
 ############# END model.jl   
-    return JSON3.write(resp)  
+    return JSON.json(resp)  
 end   ########## END Function Solve()
   
 end  # End module

@@ -1,5 +1,5 @@
 using HTTP  
-using JSON3  
+using JSON  
 using Logging  
 
 const SERVER = Ref{HTTP.Servers.Server}()
@@ -10,12 +10,12 @@ using .Solver
   
 # Function to handle the index route  
 function index_handler(req::HTTP.Request)  
-    return HTTP.Response(200, JSON3.write("Welcome to the GloPar Service!")) 
+    return HTTP.Response(200, JSON.json("Welcome to the GloPar Service!")) 
 end  
   
 # Function to handle the health check route  
 function health_handler(req::HTTP.Request)  
-    return HTTP.Response(200, JSON3.write("OK"))  
+    return HTTP.Response(200, JSON.json("OK"))  
 end  
   
 # Function to handle the /glopar/v2 POST route  
@@ -27,9 +27,9 @@ function glopar_handler(req::HTTP.Request)
         # Process the data using the Solver function  
         response_json = Solve(body)  
           
-        return HTTP.Response(200, JSON3.write(response_json)) 
+        return HTTP.Response(200, JSON.json(response_json)) 
     catch e  
-        return HTTP.Response(400, JSON3.write("Bad Request: $(e)"))  
+        return HTTP.Response(400, JSON.json("Bad Request: $(e)"))  
     end  
 end  
   
